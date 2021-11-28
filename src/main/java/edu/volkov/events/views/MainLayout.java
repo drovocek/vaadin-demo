@@ -4,20 +4,19 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.html.ListItem;
-import com.vaadin.flow.component.html.Nav;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.html.UnorderedList;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import edu.volkov.events.views.about.AboutView;
-import edu.volkov.events.views.helloworld.HelloWorldView;
+import edu.volkov.events.views.practice.hight_coupling.HighCouplingView;
+import edu.volkov.events.views.practice.low_coupling.LowCouplingView;
+import edu.volkov.events.views.practice.medium_coupling.MediumCouplingView;
+import edu.volkov.events.views.theory.CustomEventView;
+import edu.volkov.events.views.theory.ElementApiView;
+import edu.volkov.events.views.theory.SimpleView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,10 +106,13 @@ public class MainLayout extends AppLayout {
 
     private List<RouterLink> createLinks() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
-                new MenuItemInfo("Hello World", "la la-globe", HelloWorldView.class), //
-
                 new MenuItemInfo("About", "la la-file", AboutView.class), //
-
+                new MenuItemInfo("Simple", "la la-angle-right", SimpleView.class), //
+                new MenuItemInfo("Element Api", "la la-angle-right", ElementApiView.class), //
+                new MenuItemInfo("Custom Event", "la la-angle-right", CustomEventView.class), //
+                new MenuItemInfo("High Coupling", "la la-angle-right", HighCouplingView.class),
+                new MenuItemInfo("Medium Coupling", "la la-angle-right", MediumCouplingView.class),
+                new MenuItemInfo("Low Coupling", "la la-angle-right", LowCouplingView.class),
         };
         List<RouterLink> links = new ArrayList<>();
         for (MenuItemInfo menuItemInfo : menuItems) {
