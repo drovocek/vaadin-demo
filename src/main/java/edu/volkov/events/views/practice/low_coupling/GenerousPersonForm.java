@@ -14,13 +14,15 @@ import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import edu.volkov.events.data.entity.Person;
-import lombok.Getter;
+import edu.volkov.events.views.practice.low_coupling.events.CancelPublisher;
+import edu.volkov.events.views.practice.low_coupling.events.SavePublisher;
+import edu.volkov.events.views.practice.low_coupling.events.SelectNotifier;
 
 import javax.annotation.PostConstruct;
 
 @UIScope
 @SpringComponent
-public class GoodPersonForm extends Div {
+public class GenerousPersonForm extends Div implements SelectNotifier, SavePublisher, CancelPublisher {
 
     private TextField firstName;
     private TextField lastName;
@@ -44,8 +46,8 @@ public class GoodPersonForm extends Div {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        selectRegistration = ComponentUtil.addListener(UI.getCurrent(), LowCouplingView.SelectEvent.class, selectEvent -> {
-            Person selected = selectEvent.getSelected();
+        selectRegistration = addSelectListener(UI.getCurrent(), selectEvent -> {
+            Person selected = (Person) selectEvent.getSelected();
             if (selected == null) {
                 clearForm();
             } else {
@@ -104,7 +106,7 @@ public class GoodPersonForm extends Div {
             clearForm();
 //            refreshGrid(); <--- In MediumCouplingView
             //----
-            ComponentUtil.fireEvent(UI.getCurrent(), new CancelEvent(this));
+            fireCancelEventTo(UI.getCurrent());
             //----
         });
 
@@ -119,7 +121,7 @@ public class GoodPersonForm extends Div {
 //                Notification.show("Person details stored.");
 //                UI.getCurrent().navigate(MediumCouplingView.class);
                 //----
-                ComponentUtil.fireEvent(UI.getCurrent(), new SaveEvent(this, this.formObject));
+                fireSaveEventTo(UI.getCurrent(), this.formObject);
                 //----
                 clearForm();
             } catch (ValidationException validationException) {
@@ -135,25 +137,5 @@ public class GoodPersonForm extends Div {
     private void populateForm(Person value) {
         this.formObject = value;
         binder.readBean(this.formObject);
-    }
-
-    //ON_CANCEL
-    public static class CancelEvent extends ComponentEvent<GoodPersonForm> {
-
-        public CancelEvent(GoodPersonForm source) {
-            super(source, false);
-        }
-    }
-
-    //ON_SAVE
-    public static class SaveEvent extends ComponentEvent<GoodPersonForm> {
-
-        @Getter
-        private final Person formObject;
-
-        public SaveEvent(GoodPersonForm source, Person formObject) {
-            super(source, false);
-            this.formObject = formObject;
-        }
     }
 }
